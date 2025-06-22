@@ -1,0 +1,92 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Install Requirements",
+            "type": "shell",
+            "command": "pip install -r requirements.txt",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Run MP3 Renamer",
+            "type": "shell",
+            "command": "python mp3_renamer.py ${input:mp3Directory} --duration ${input:duration} --start ${input:startTime} ${input:firstWordsParam} ${input:verboseParam} --engine ${input:engineParam} --model ${input:modelParam}",
+            "problemMatcher": [],
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "mp3Directory",
+            "type": "promptString",
+            "description": "Directory containing MP3 files to process",
+            "default": "."
+        },
+        {
+            "id": "duration",
+            "type": "promptString",
+            "description": "Duration in seconds to process (default: 10)",
+            "default": "10"
+        },
+        {
+            "id": "startTime",
+            "type": "promptString",
+            "description": "Start time in seconds for audio processing (default: 0)",
+            "default": "0"
+        },
+        {
+            "id": "firstWordsParam",
+            "type": "pickString",
+            "description": "Use first N words instead of extracting sentences?",
+            "options": [
+                "",
+                "--first 5",
+                "--first 10", 
+                "--first 15",
+                "--first 20"
+            ],
+            "default": ""
+        },
+        {
+            "id": "verboseParam",
+            "type": "pickString",
+            "description": "Enable verbose output?",
+            "options": [
+                "",
+                "--verbose"
+            ],
+            "default": ""
+        },
+        {
+            "id": "engineParam",
+            "type": "pickString",
+            "description": "Speech recognition engine to use",
+            "options": [
+                "whisper",
+                "google",
+                "both"
+            ],
+            "default": "whisper"
+        },
+        {
+            "id": "modelParam",
+            "type": "pickString",
+            "description": "Whisper model size (larger is more accurate but slower)",
+            "options": [
+                "tiny",
+                "base",
+                "small",
+                "medium",
+                "large"
+            ],
+            "default": "base"
+        }
+    ]
+}
