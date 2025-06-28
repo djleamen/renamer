@@ -1,5 +1,10 @@
 # MP3 Renamer
 
+[![Python Version](https://img.shields.io/badge/python-3.6%2B-blue)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/github/license/djleamen/renamer)](LICENSE)
+![Status](https://img.shields.io/badge/status-active-brightgreen)
+[![Last Commit](https://img.shields.io/github/last-commit/djleamen/renamer)](https://github.com/djleamen/renamer/commits)
+
 A Python tool that automatically renames MP3 files based on their speech content using AI-powered Speech-to-Text technology.
 
 ## Features
