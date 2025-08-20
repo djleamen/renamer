@@ -25,8 +25,7 @@ A Python tool that automatically renames MP3 files based on their speech content
   - SpeechRecognition (fallback recognition)
   - pydub (audio file manipulation)
   - PyAudio (for audio processing)
-  - ffmpeg-python (for audio conversion)
-- FFmpeg (for MP3 conversion)
+- FFmpeg (for MP3 conversion, used by pydub)
 
 ## Installation
 
