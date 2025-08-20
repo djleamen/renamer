@@ -1,1 +1,5 @@
 .venv/
+# Security test files - prevent accidental execution
+test.py
+vuln_proof.txt
+vulnerability_proof.txt
