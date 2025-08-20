@@ -47,10 +47,29 @@ The vulnerability has been mitigated by removing the unnecessary `ffmpeg-python`
 After applying this fix:
 
 1. The vulnerable `future` package is no longer installed as a dependency
-2. The application continues to function normally for MP3 to WAV conversion
+2. The application continues to function normally for MP3 to WAV conversion using `pydub.AudioSegment.from_mp3()`
 3. No `test.py` files in the working directory can be accidentally executed
+4. The attack surface is reduced by eliminating an unnecessary transitive dependency
 
-## Recommendations
+### Verification Script
+
+A verification script can confirm the mitigation:
+
+```python
+# Check that future and ffmpeg-python are not installed
+import sys
+try:
+    import future
+    print("❌ FAIL: future package still installed")
+except ImportError:
+    print("✅ PASS: future package not installed")
+
+try:
+    import ffmpeg
+    print("❌ FAIL: ffmpeg-python package still installed") 
+except ImportError:
+    print("✅ PASS: ffmpeg-python package not installed")
+```
 
 1. **Keep dependencies minimal**: Only include dependencies that are actually used
 2. **Regular security audits**: Use tools like `pip-audit` to check for vulnerable dependencies
