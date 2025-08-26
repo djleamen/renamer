@@ -1,0 +1,6 @@
+{
+    "sonarlint.connectedMode.project": {
+        "connectionId": "djleamen",
+        "projectKey": "djleamen_renamer"
+    }
+}
