@@ -46,7 +46,7 @@ MP3 Renamer is a Python-based CLI tool that automatically renames MP3 files base
 
 ### Setup
 1. Install system dependencies:
-   - **Linux**: `apt-get install portaudio19-dev ffmpeg`
+   - **Linux**: `sudo apt-get install portaudio19-dev ffmpeg`
    - **macOS**: `brew install ffmpeg`
    - **Windows**: Download FFmpeg from ffmpeg.org
 2. Install Python dependencies: `pip install -r requirements.txt`
@@ -65,7 +65,8 @@ MP3 Renamer is a Python-based CLI tool that automatically renames MP3 files base
 - `transcribe_with_whisper()` - Whisper-specific transcription logic
 - `extract_first_sentence()` - Extracts meaningful text from transcription
 - `clean_filename()` - Sanitizes text for use as filenames
-- `process_mp3_files()` - Main orchestration function
+- `process_directory()` - Main orchestration function for processing a directory
+- `process_mp3_file()` - Processes a single MP3 file
 
 ## Important Considerations
 
