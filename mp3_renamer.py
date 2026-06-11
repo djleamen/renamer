@@ -114,7 +114,11 @@ def rename_mp3_file(mp3_path, new_name):
     try:
         new_path = mp3_path.parent / f"{new_name}{mp3_path.suffix}"
         counter = 1
-        while new_path.exists() and new_path != mp3_path:
+        # samefile() avoids false collisions with itself on
+        # case-insensitive filesystems (e.g. renaming only the casing)
+        while new_path.exists() and not (
+            new_path == mp3_path or new_path.samefile(mp3_path)
+        ):
             new_path = mp3_path.parent / f"{new_name}_{counter}{mp3_path.suffix}"
             counter += 1
         mp3_path.rename(new_path)
@@ -126,30 +130,34 @@ def rename_mp3_file(mp3_path, new_name):
 def process_mp3_file(mp3_path, duration=10, start_time=0, first_n_words=None, use_whisper=True):
     print(f"Processing: {mp3_path}")
     wav_path = convert_mp3_to_wav(mp3_path)
-    if VERBOSE:
-        print(f"  Converted to WAV for processing")
-    if VERBOSE:
-        print(f"  Transcribing audio from {start_time}s for {duration}s using {'Whisper' if use_whisper else 'Google Speech API'}...")
-    transcript = transcribe_audio(wav_path, duration, start_time, use_whisper)
-    if transcript:
+    try:
         if VERBOSE:
-            print(f"  Full transcript: \"{transcript}\"")
-    else:
-        print(f"  Failed to transcribe audio")
-    if first_n_words is not None and transcript:
-        words = transcript.split()
-        if len(words) > first_n_words:
-            first_sentence = ' '.join(words[:first_n_words])
+            print(f"  Converted to WAV for processing")
+        if VERBOSE:
+            print(f"  Transcribing audio from {start_time}s for {duration}s using {'Whisper' if use_whisper else 'Google Speech API'}...")
+        transcript = transcribe_audio(wav_path, duration, start_time, use_whisper)
+        if transcript:
+            if VERBOSE:
+                print(f"  Full transcript: \"{transcript}\"")
         else:
-            first_sentence = transcript
-    else:
-        first_sentence = extract_first_sentence(transcript)
-    if VERBOSE:
-        print(f"  Extracted text for filename: \"{first_sentence}\"")
-    new_name = clean_filename(first_sentence)
-    if VERBOSE:
-        print(f"  Cleaned filename: \"{new_name}\"")
-    os.remove(wav_path)
+            print(f"  Failed to transcribe audio")
+        if first_n_words is not None and transcript:
+            words = transcript.split()
+            if len(words) > first_n_words:
+                first_sentence = ' '.join(words[:first_n_words])
+            else:
+                first_sentence = transcript
+        else:
+            first_sentence = extract_first_sentence(transcript)
+        if VERBOSE:
+            print(f"  Extracted text for filename: \"{first_sentence}\"")
+        new_name = clean_filename(first_sentence)
+        if VERBOSE:
+            print(f"  Cleaned filename: \"{new_name}\"")
+    finally:
+        # Always clean up the temporary .wav, even if transcription throws
+        if wav_path.exists():
+            os.remove(wav_path)
     if not new_name or new_name == "untranscribable":
         print(f"  Could not transcribe: {mp3_path.name}")
         return mp3_path
