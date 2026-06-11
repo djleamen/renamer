@@ -113,6 +113,10 @@ def clean_filename(text):
 def rename_mp3_file(mp3_path, new_name):
     try:
         new_path = mp3_path.parent / f"{new_name}{mp3_path.suffix}"
+        counter = 1
+        while new_path.exists() and new_path != mp3_path:
+            new_path = mp3_path.parent / f"{new_name}_{counter}{mp3_path.suffix}"
+            counter += 1
         mp3_path.rename(new_path)
         return new_path
     except Exception as e:
@@ -164,7 +168,11 @@ def process_directory(directory_path, duration=10, start_time=0, first_n_words=N
         return
     print(f"Found {len(mp3_files)} MP3 file(s) to process")
     for mp3_file in mp3_files:
-        process_mp3_file(mp3_file, duration, start_time, first_n_words, use_whisper)
+        try:
+            process_mp3_file(mp3_file, duration, start_time, first_n_words, use_whisper)
+        except Exception as e:
+            print(f"  Error processing {mp3_file.name}: {e}")
+            print("  Skipping this file and continuing with the next one")
     print("Processing complete!")
 
 def init_whisper_model(model_size="base"):
