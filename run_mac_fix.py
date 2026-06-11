@@ -82,7 +82,8 @@ def main():
         return
     
     # Construct the command to run the main script
-    cmd = [sys.executable, "mp3_renamer.py"] + args
+    script_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "mp3_renamer.py")
+    cmd = [sys.executable, script_path] + args
     
     print("\nRunning MP3 renamer with fixed certificates...")
     print(f"Command: {' '.join(cmd)}")
