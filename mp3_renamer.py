@@ -315,12 +315,14 @@ def fix_ssl_certificate():
                     if result.returncode == 0:
                         print("SSL certificate installation successful")
                         return True
-            print("WARNING: Could not fix SSL certificates properly.")
-            print("As a temporary workaround, will disable SSL verification.")
-            print("This is NOT SECURE and should be fixed properly later.")
-            import ssl
-            ssl._create_default_https_context = ssl._create_unverified_context
-            return True
+            print("WARNING: Could not configure SSL certificates automatically.")
+            print("SSL verification will NOT be disabled, as that would expose")
+            print("downloads and API calls to man-in-the-middle attacks.")
+            print("To fix certificates, either:")
+            print("  1. Install certifi: pip install certifi")
+            print("  2. Run the 'Install Certificates.command' bundled with Python")
+            print("  3. Use --engine google to skip the Whisper model download")
+            return False
         except Exception as e:
             print(f"Error while trying to fix SSL certificates: {e}")
             print("Will attempt to continue but may encounter SSL errors")

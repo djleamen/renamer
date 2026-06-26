@@ -59,10 +59,11 @@ def fix_mac_ssl():
     
     if not found_script:
         print("Could not find certificate installation script.")
-        print("As a last resort, using SSL verification bypass (not secure)")
-        import ssl
-        ssl._create_default_https_context = ssl._create_unverified_context
-    
+        print("SSL verification will NOT be disabled, as that would expose")
+        print("downloads and API calls to man-in-the-middle attacks.")
+        print("Install certifi (pip install certifi) or run Python's")
+        print("'Install Certificates.command' to fix certificates instead.")
+
     return True
 
 def main():
