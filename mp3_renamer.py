@@ -2,10 +2,8 @@
 MP3 Renamer - A tool to automatically rename MP3 files based on their speech content.
 """
 import os
-import sys
 import argparse
 import speech_recognition as sr
-import pydub
 from pathlib import Path
 from pydub import AudioSegment
 import re
@@ -227,7 +225,6 @@ def init_whisper_model(model_size="base"):
         return None
 
 def transcribe_with_whisper(audio_path, duration=10, start_time=0):
-    global WHISPER_MODEL
     if WHISPER_MODEL is None:
         print("Whisper model not initialized, attempting to load now...")
         init_whisper_model()
