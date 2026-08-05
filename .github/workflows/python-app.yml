@@ -16,14 +16,15 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    # Fix: Install system dependency needed for PyAudio
+    # PyAudio builds against PortAudio, which is not on the runner by default
     - name: Install PortAudio dependencies
       run: sudo apt-get update && sudo apt-get install -y portaudio19-dev
 
     - name: Set up Python 3.10
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: "3.10"
+        cache: 'pip'
 
     - name: Install dependencies
       run: |
@@ -38,5 +39,6 @@ jobs:
 
     - name: Test with pytest
       run: |
-](#)
-
+        # Exit code 5 means "no tests collected"; the repo has no test suite yet,
+        # so treat that as a pass rather than a failure.
+        pytest || [ $? -eq 5 ]
