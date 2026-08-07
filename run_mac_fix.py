@@ -8,6 +8,7 @@ This script:
 
 import os
 import sys
+import shutil
 import subprocess
 import platform
 
@@ -48,8 +49,12 @@ def fix_mac_ssl():
         if cert_scripts:
             found_script = True
             print(f"Running certificate installation script: {cert_scripts[0]}")
-            result = subprocess.run(['bash', cert_scripts[0]], 
-                                  stdout=subprocess.PIPE, 
+            bash_path = shutil.which('bash')
+            if not bash_path:
+                print("bash was not found in your PATH; skipping cert script")
+                break
+            result = subprocess.run([bash_path, cert_scripts[0]],
+                                  stdout=subprocess.PIPE,
                                   stderr=subprocess.PIPE)
             if result.returncode == 0:
                 print("Certificate installation successful")

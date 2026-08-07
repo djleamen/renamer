@@ -268,8 +268,15 @@ def transcribe_with_whisper(audio_path, duration=10, start_time=0):
 
 def check_ffmpeg():
     try:
+        import shutil
         import subprocess
-        result = subprocess.run(['ffmpeg', '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # Resolve the absolute path up front so we don't execute whatever
+        # 'ffmpeg' happens to be first on PATH (PATH-hijacking hardening).
+        ffmpeg_path = shutil.which('ffmpeg')
+        if not ffmpeg_path:
+            print("ffmpeg was not found in your PATH")
+            return False
+        result = subprocess.run([ffmpeg_path, '-version'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if result.returncode == 0:
             print("ffmpeg is installed and available")
             return True
@@ -284,6 +291,7 @@ def check_ffmpeg():
 def fix_ssl_certificate():
     import platform
     import os
+    import shutil
     import subprocess
     if platform.system() == 'Darwin':
         print("Detected macOS, checking for SSL certificate fix...")
@@ -306,8 +314,12 @@ def fix_ssl_certificate():
                 if cert_scripts:
                     print(f"Found certificate installation script: {cert_scripts[0]}")
                     print("Attempting to run certificate fix script...")
-                    result = subprocess.run(['bash', cert_scripts[0]], 
-                                           stdout=subprocess.PIPE, 
+                    bash_path = shutil.which('bash')
+                    if not bash_path:
+                        print("bash was not found in your PATH; skipping cert script")
+                        break
+                    result = subprocess.run([bash_path, cert_scripts[0]],
+                                           stdout=subprocess.PIPE,
                                            stderr=subprocess.PIPE)
                     if result.returncode == 0:
                         print("SSL certificate installation successful")
