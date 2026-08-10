@@ -1,4 +1,9 @@
 .venv/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+
 # Security test files - prevent accidental execution
 test.py
 vuln_proof.txt
